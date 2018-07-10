@@ -194,6 +194,7 @@ LocalTrajectoryBuilder3D::AddRangeData(
     common::optional<common::Duration> sensor_duration;
     if (last_sensor_time_.has_value()) {
       sensor_duration = current_sensor_time - last_sensor_time_.value();
+      LOG(INFO) << "sensor_duration:       " << common::ToSeconds(sensor_duration.value());
     }
     last_sensor_time_ = current_sensor_time;
     num_accumulated_ = 0;
@@ -303,6 +304,12 @@ LocalTrajectoryBuilder3D::AddAccumulatedRangeData(
     const auto accumulation_duration =
         accumulation_stop - last_accumulation_stop_.value();
     kLocalSlamLatencyMetric->Set(common::ToSeconds(accumulation_duration));
+    if (sensor_duration.has_value()) {
+      LOG(INFO) << "accumulation_duration: " << common::ToSeconds(accumulation_duration) << " --- " <<
+      100 * common::ToSeconds(accumulation_duration) / common::ToSeconds(sensor_duration.value()) << " %";
+    } else {
+      LOG(INFO) << "accumulation_duration: " << common::ToSeconds(accumulation_duration); 
+    }
   }
   last_accumulation_stop_ = accumulation_stop;
   return common::make_unique<MatchingResult>(MatchingResult{
