@@ -20,6 +20,7 @@
 #include <chrono>
 #include <ostream>
 #include <ratio>
+#include <time.h>
 
 #include "cartographer/common/port.h"
 
