@@ -50,5 +50,11 @@ common::Duration FromMilliseconds(const int64 milliseconds) {
       std::chrono::milliseconds(milliseconds));
 }
 
+double GetThreadCpuTimeSeconds() {
+  struct timespec tm;
+  clock_gettime(CLOCK_THREAD_CPUTIME_ID, &tm);
+  return static_cast<double>(tm.tv_sec) + 1e-9 * static_cast<double>(tm.tv_nsec);
+}
+
 }  // namespace common
 }  // namespace cartographer

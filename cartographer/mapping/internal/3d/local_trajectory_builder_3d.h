@@ -110,6 +110,8 @@ class LocalTrajectoryBuilder3D {
   common::optional<std::chrono::steady_clock::time_point>
       last_accumulation_stop_;
 
+  common::optional<double> last_accumulation_stop_thread_cpu_time_sec_;
+
   RangeDataCollator range_data_collator_;
 
   common::optional<common::Time> last_sensor_time_;
