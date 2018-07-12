@@ -17,6 +17,7 @@
 #include "cartographer/common/time.h"
 
 #include <string>
+#include <time.h>
 
 namespace cartographer {
 namespace common {
