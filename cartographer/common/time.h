@@ -17,7 +17,9 @@
 #ifndef CARTOGRAPHER_COMMON_TIME_H_
 #define CARTOGRAPHER_COMMON_TIME_H_
 
+#include <cerrno>
 #include <chrono>
+#include <cstring>
 #include <ostream>
 #include <ratio>
 
@@ -60,6 +62,7 @@ int64 ToUniversal(Time time);
 // For logging and unit tests, outputs the timestamp integer.
 std::ostream& operator<<(std::ostream& os, Time time);
 
+// CPU time consumed by the thread so far, in seconds.
 double GetThreadCpuTimeSeconds();
 
 }  // namespace common

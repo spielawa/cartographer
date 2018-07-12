@@ -302,10 +302,10 @@ LocalTrajectoryBuilder3D::AddAccumulatedRangeData(
     kLocalSlamInsertIntoSubmapFraction->Set(insert_into_submap_fraction);
   }
   const auto accumulation_stop = std::chrono::steady_clock::now();
-  const double accumulation_stop_cpu_thread_time_sec = common::GetThreadCpuTimeSeconds();
-  if (last_accumulation_stop_.has_value()) {
+  const double cpu_thread_time_sec = common::GetThreadCpuTimeSeconds();
+  if (last_wall_time_.has_value()) {
     const auto accumulation_duration =
-        accumulation_stop - last_accumulation_stop_.value();
+        accumulation_stop - last_wall_time_.value();
     kLocalSlamLatencyMetric->Set(common::ToSeconds(accumulation_duration));
     if (sensor_duration.has_value()) {
       LOG(INFO) << "accumulation_duration: " << common::ToSeconds(accumulation_duration) << " --- " <<
@@ -314,9 +314,9 @@ LocalTrajectoryBuilder3D::AddAccumulatedRangeData(
       LOG(INFO) << "accumulation_duration: " << common::ToSeconds(accumulation_duration); 
     }
   }
-  if (last_accumulation_stop_thread_cpu_time_sec_.has_value()) {
-      const double accumulation_thread_cpu_duration = accumulation_stop_cpu_thread_time_sec - 
-        last_accumulation_stop_thread_cpu_time_sec_.value();
+  if (last_thread_cpu_time_sec_.has_value()) {
+      const double accumulation_thread_cpu_duration = cpu_thread_time_sec - 
+        last_thread_cpu_time_sec_.value();
     if (sensor_duration.has_value()) {
       LOG(INFO) << "thread_cpu_duration:   " << accumulation_thread_cpu_duration << " --- " <<
       100 * accumulation_thread_cpu_duration / common::ToSeconds(sensor_duration.value()) << " %";
@@ -325,8 +325,8 @@ LocalTrajectoryBuilder3D::AddAccumulatedRangeData(
     }
 
   }
-  last_accumulation_stop_ = accumulation_stop;
-  last_accumulation_stop_thread_cpu_time_sec_ = accumulation_stop_cpu_thread_time_sec;
+  last_wall_time_ = accumulation_stop;
+  last_thread_cpu_time_sec_ = cpu_thread_time_sec;
   return common::make_unique<MatchingResult>(MatchingResult{
       time, *pose_estimate, std::move(filtered_range_data_in_local),
       std::move(insertion_result)});
